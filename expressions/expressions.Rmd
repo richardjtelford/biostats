@@ -1,0 +1,119 @@
+---
+title: "Mathematical notation for plots"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.height = 1, fig.width = 5)
+library("learnr")
+library("tidyverse")
+theme_set(theme_classic())
+
+tutorial_options(exercise.cap = "Exercise")
+```
+
+## Introduction
+
+When making a publication ready plot, we often need to use special characters and mathematical notation (such as $TP~concentration~\mu g l^{-1}$ or $\sqrt{Standardised~ residuals}$) for the axes and other labels. The functions `expression()` and `bquote()` are powerful tools for annotating figures with mathematical notation in R. This functionality is not obvious from their respective help files. `demo(plotmath)` and `?plotmath` shows the huge potential of `expression()`, but do not help that much with getting the code need for many real cases.
+
+Expressions are comprised of symbols. The expression $TP ~\mu g l^{-1}$ includes the symbols $TP$, $concentration$, $\mu$, $g$, $l$, and $^{-1}$. In this tutorial, you will learn how to generate these symbols and combine them with the `expression()` function.
+
+The key to getting expressions to work is to start with something simple, test it and edit until it works, then add the next symbol and repeat. This is the approach we are going to use here.
+
+## `expression()`
+
+I’m going to use `expression()` with `labs()`, but the same expressions can be used with any of function that writes text on a plot (including plots made with base graphics).
+
+The simplest use of expression is take a symbol that is a single word or number.
+
+```{r}
+g <- ggplot() + #empty plot
+  labs(x = expression(TP))
+g
+```
+
+Notice that `expression()` does not require quote marks. This use `expression()` is entirely pointless except as a starting point for something more complex.
+
+If we want two symbols with a space between them, we need to separate them with a tilde `~`. If we don't want a space, we can separate symbols with `*` (if you actually want a `*`, use `%*%`).
+
+```{r}
+g + labs(x = expression(TP~concentration))
+```
+
+Some symbols have special meanings, for example, to get a Greek letter, write its name in lower case. Capitalise the first letter to get an upper-case Greek letter. If for some reason you want to have "beta" written on your plot, it must be in quotes.
+
+```{r}
+g + labs(x = expression(TP~concentration~mu*g))
+```
+
+Subscript or superscript can be added to a string using `^` and `[]` notation respectively. If you want more than one symbol to be in superscript, you need to enclose them in braces `{}`.
+
+```{r}
+g + labs(x = expression(TP~concentration~mu*g*l^-1))
+```
+
+### Your turn
+
+Make the x-axis label read $Area~m^2$.
+
+```{r expression, exercise=TRUE}
+g <- ggplot()
+g + labs()
+```
+
+```{r expression-solution}
+g <- ggplot()
+g + labs(x = expression(Area~m^2))
+```
+
+
+
+### Other tips
+
+- `demo(plotmath)` and `?plotmath` are very useful.
+- Some symbols are not defined by `plotmath` can be included using [unicode](http://www.unicode.org/charts/). For example a per mil symbol (‰) - `\u2030` 
+- To start an expression() with a superscript (or subscript), put `phantom()` first.
+
+```{r, eval = FALSE}
+g + labs(x = expression(phantom()^14*C~years~BP))
+```
+
+
+
+## Including objects
+
+So far so good. But sometimes, we want to include the value of an R-object in the expression.
+
+For example, if we wanted to label a point with its `x` value, this will not work.
+
+```{r, eval = FALSE}
+x <- 5
+g + labs(x = expression(expression(x==x))
+```
+
+How is R supposed to know which `x` should be substituted by `5`? Fortunately, there is another function, `bquote()`, which will let us do this if we use the helper function `.()` with the object we want to include.
+
+
+```{r}
+x <- 5
+g + labs(x = bquote(x==.(x)))
+g + labs(x = bquote(x==.(x)~mu*g~l^-1))
+
+```
+
+## A LaTeX approach
+
+If you are already familiar with the LaTeX equation notation, you can convert equations written in LaTeX to R expressions  with `latex2exp::TeX`
+
+```{r}
+library("latex2exp")
+g + labs(x = TeX("$TP~concentration~\\mu g l^{-1}$"))
+```
+
+
+
+If you understand these examples, you should be able to use the remainder of the functionality demonstrated by demo(plotmath) and at ?plotmath.

@@ -1,0 +1,37 @@
+---
+title: "Abstract demo"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, fig.height = 1, fig.width = 5)
+library("learnr")
+library("tidyverse")
+library("tokenizers")
+library("sortable")
+
+tutorial_options(exercise.cap = "Exercise")
+```
+
+```{r}
+#should be possible to pass DOI as parameter and grab abstract etc
+text <- "Oil palm is a major habitat in the tropics. It is highly productive and contributes substantially to the economies of producing countries, but its expansion has caused widespread deforestation, with negative consequences for biodiversity. Such biodiversity losses may have substantial impacts on ecosystem functions within oil palm and resilience of functions to changing rainfall patterns, with impacts on yield. However, although the direct effects of water deficit on yield have been studied, little work has investigated ecosystem processes within plantations or the resilience of functions to changing rainfall. We conducted ecosystem function experiments within mature oil palm at the Biodiversity and Ecosystem Function in Tropical Agriculture (BEFTA) Programme site in Sumatra, Indonesia. We measured rates of leaf litter decomposition, seed removal, mealworm predation, and herbivory at multiple time points spanning the 2015–2016 El Niño - Southern Oscillation (ENSO) event that caused widespread drought within Southeast Asia. We found that mealworm predation, seed removal, and decomposition rates were high, whilst herbivory levels were low, indicating a healthy ecosystem with high levels of pest control and organic matter breakdown. Exclusion tests showed that the presence of invertebrates was associated with higher levels of seed removal and decomposition and the presence of vertebrates with higher predation. All functions were relatively robust to changes in rainfall. Yet, whilst seed removal and herbivory did not alter with rainfall, decomposition and predation showed more complex effects, with levels of both processes increasing with current rainfall levels when rainfall in preceding time periods was low. This suggests that both processes are resilient to change and able to recover following drought. Our results indicate that the ecosystem processes measured within oil palm plantations are healthy and resilient to changing rainfall patterns. This is hopeful and suggests that the crop may be fairly robust to future changes in precipitation."
+
+```
+
+
+```{r sentences}
+sentences <- unlist(tokenize_sentences(text))
+```
+
+```{r abstract-sorter}
+question_rank("Sort these sentences into an abstract",
+              answer(sentences, correct = TRUE), 
+              allow_retry = TRUE
+              )
+```
+

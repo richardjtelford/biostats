@@ -1,0 +1,187 @@
+---
+title: "Data handling with Tidyverse for beginners"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("flair")
+```
+
+## Introduction to the `tidyverse`
+
+The `tidyverse` package is set of R packages for data handling and display.
+I use it for all my data handling.
+
+You can install `tidyverse` with 
+
+```{r installation, eval = FALSE}
+install.packages("tidyverse")
+```
+
+This can take a few minutes. 
+You only need to do this once.
+
+Load `tidyverse` with
+
+```{r load-tidyverse, include = FALSE}
+library("tidyverse")
+```
+
+Some important packages in `tidyverse` are
+
+- **`ggplot2`** for graphics
+- **`tibble`** for improved `data.frame`s
+- **`readr`** for importing text files (e.g. csv files)
+- `readxl` for importing excel files
+- **`tidyr`** for tidying data
+- **`dplyr`** for manipulating `data.frame`s or `tibble`s
+- **`stringr`** for manipulating character vectors
+- `lubridate` for manipulating dates (optionally with times) and `hms` for times
+- **`forcats`** for manipulating factors
+- `broom` for extracting summary information from models
+- **`purrr`** for iterating 
+
+Packages in bold are automatically loaded with `tidyverse`, others need loading with `library()` separately. 
+This tutorial focuses on `tidyr` and `dplyr`. 
+
+
+## Pipes
+
+It is very common to need to run functions on the output of other functions. 
+For example, the following code uses `pull` to extract the `Sepal.Width` column from the `iris` data set, then calculates the variance, and then square roots this to give the standard deviation.
+
+```{r without-pipes}
+x <- sqrt(var(pull(iris, Sepal.Width), na.rm = TRUE))
+x
+```
+
+It is fairly dificult to read isn't it. 
+It can be difficult to see which argument belongs to each function: sometime an argument gets given to the wrong function.
+
+An alternative way to write this code would be to break it into seperate steps
+
+```{r intermediates}
+x <- pull(iris, Sepal.Width)
+x2 <- var(x, na.rm = TRUE)
+x3 <- sqrt(x2)
+x3
+```
+
+This is easier to read, but we end up with a lot of intermediate objects and keeping track of them, for example if we wanted to change the order of the functions, is difficult.
+
+This is where pipes can be used to chain functions together. The pipe operator is `%>%` (the Rstudio keyboard shortcut is `ctrl-shift-m`). 
+Pipes are available when `tidyverse` is loaded. 
+
+```{r flair, echo = FALSE}
+decorate("with_pipe") %>% 
+  flair("%>%")
+```
+
+
+```{r with_pipe, include = FALSE}
+x <- iris %>%
+  pull(Sepal.Width) %>% 
+  var(na.rm = TRUE) %>% 
+  sqrt()
+x
+```
+
+The pipe works by passing the result of the function on the left of the pipe to the first argument of the function after the pipe.
+
+If we don't want to pass the result to the first argument, we either need to name the first argument (the result will go to the first available argument), or safer and more explict, use the `.` pronoun to specify where the result should go. 
+
+```{r, error=TRUE}
+iris %>% lm(Sepal.Length ~ Sepal.Width) # Fails. The data are given to the first argument which should be the formula
+iris %>% lm(formula = Sepal.Length ~ Sepal.Width) # Works. Data are given to first available argument. Confusing
+iris %>% lm(Sepal.Length ~ Sepal.Width, data = .) # Better using . pronoun
+```
+
+There are some other types of pipe in the `magrittr` package that can be useful occasionally.
+
+## tibbles and data frames
+
+A `tibble` is an improved version of a `data.frame` for storing data in columns.
+
+  The main advantages are with printing. Unless a `data.frame` is very large, R will print it all. In contrast, a printing a `tibble` will only show what fits on the screen. The `tibble` also shows us what type of object is in each column. 
+
+```{r tibbles, results='markup'}
+# a data.frame
+iris
+
+# a tibble
+as_tibble(iris)
+```
+
+Importing data with the `readr` or `readxl` packages will automatically make a `tibble`. The function `as_tibble` will convert a `data.frame` into a `tibble` (if you want to keep rownames you will need to use the rownames argument or pass the `data.frame` to `rownames_to_column()` function first)
+
+All functions that work with a `data.frame` should work with a `tibble` (it is probably a bug if it doesn't). 
+
+
+## Making tidy data with `tidyr`
+       
+pivot_longer pivot_wider
+
+(complete crossing drop_na expand extract fill full_seq nesting replace_na separate separate_rows table1 uncount unite) 
+      
+The `tidyr` cheatsheet is very useful.
+
+## dplyr
+
+`dplyr` is a package for manipulating `data.frames` and `tibbles`.
+There are many function in `dplyr`, this focuses on the functions I use most often.
+
+The `dplyr` cheatsheet is very useful.
+
+## selecting columns
+ select pull rename
+
+starts_with ends_with everything contains matches num_range one_of last_col 
+
+## filtering rows
+ distinct filter slice
+(sample_frac sample_n)
+between near
+
+## mutating columns
+mutate (transmute)
+lag lead recode n_distinct  n coalesce last first nth row_number 
+cummean cumall cumany
+
+case_when if_else
+
+## summarise
+
+## grouping data
+group_by ungroup
+ -> summarise
+ -> mutate
+ 
+## count
+count (tally)
+
+
+(intersect setdiff union union_all)
+
+
+((group_map group_modify group_walk))
+
+## sorting data
+arrange desc 
+
+
+## multi-table
+left_join inner_join full_join (right_join) ((semi_join anti_join))
+bind_cols bind_rows 
+
+
+## advanced ??
+nest unnest
+map
+
+## arrange_all arrange_at arrange_if filter_all filter_at filter_if distinct_all distinct_at distinct_if group_by_all group_by_at group_by_if mutate_all mutate_at mutate_if rename_all rename_at rename_if select_all select_at select_if transmute_all transmute_at transmute_if summarise_all summarise_at summarise_if vars funs 

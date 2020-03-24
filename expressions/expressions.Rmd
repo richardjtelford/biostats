@@ -26,7 +26,7 @@ The key to getting expressions to work is to start with something simple, test i
 
 ## `expression()`
 
-I’m going to use `expression()` with `labs()`, but the same expressions can be used with any of function that writes text on a plot (including plots made with base graphics).
+I’m going to use `expression()` with `labs()`, but the same expressions can be used with any function that writes text on a plot (including plots made with base graphics).
 
 The simplest use of expression is take a symbol that is a single word or number.
 

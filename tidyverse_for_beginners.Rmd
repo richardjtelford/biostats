@@ -136,19 +136,193 @@ The `tidyr` cheatsheet is very useful.
 `dplyr` is a package for manipulating `data.frames` and `tibbles`.
 There are many function in `dplyr`, this focuses on the functions I use most often.
 
+This tutorial assumes that you have `dplyr` version >= 1.0.0. To find your `dplyr` version, run `packageVersion("dplyr")`. 
+
+__THIS VERION IS CURRENTLY ONLY AVAILABLE ON GITHUB `remotes::install_github("tidyverse/dplyr")` and is called 0.8.xx__
+
 The `dplyr` cheatsheet is very useful.
 
-## selecting columns
- select pull rename
+## Selecting columns
 
-starts_with ends_with everything contains matches num_range one_of last_col 
+You can choose which columns of the `data.frame` you want with `select()`.
+
+The first argument is the data, which is supplied by the pipe `%>%`, the next arguments are the names of the columns you want. 
+The names do not need quote marks.
+
+```{r select1}
+#select Sepal.Length, Sepal.Width, Species
+iris %>% select(Sepal.Length, Sepal.Width, Species)
+```
+
+This is equivalent to the base R code
+
+```{r select1.5}
+#select Sepal.Length, Sepal.Width, Species
+iris[, c("Sepal.Length", "Sepal.Width", "Species")]
+```
+
+
+If you want to `select` adjacent columns, you can use the notation `first:last`.
+
+```{r select2}
+#select Sepal.Length to Petal.Width
+iris %>% select(Sepal.Length:Petal.Width)
+```
+
+Sometimes it is easier to remove the columns you don't want. 
+You can do this by putting a `-` in front of the column name.
+
+```{r select3}
+#select Sepal.Length, Sepal.Width, Species
+iris %>% select(-Petal.Length, -Petal.Width)
+```
+
+If there is a pattern to the column names that we want to select (or remove), there are some helper functions.
+For example, to select columns that start with "Sepal", we can use the function `starts_with`.
+
+```{r select4}
+#select Sepal.Length, Sepal.Width, Species
+iris %>% select(starts_with("Sepal"))
+```
+
+Conversly, if we want to select all columns that end with "Width", we can use the fuction `ends_with()`.
+`contains()` is more flexible and `matches()` is the most powerful of the helper functions, using regular expressions to identify the columns.
+
+Sometimes, you might want to select all the columns of a certain type. 
+For example, to select all the numeric columns we can use the `is.numeric` function inside select.
+
+```{r select5}
+iris %>% select(is.numeric) # No brackets on the function
+```
+
+Other `is.*` functions exist, for example, `is.character` for text, `lubridate::is.Date` for dates.
+
+You can also select columns by number (1 being the first column), but this is generally a bad idea because if a new column is added, the code will break.
+
+## Renaming columns
+
+You can use `rename()` to rename columns
+
+```{r rename1}
+iris %>% select(spp = Species)
+```
+
+The syntax is `new_name = current_name`.
+
+You can also rename a column when selecting
+
+```{r rename2}
+iris %>% select(spp = Species)
+```
+
+
+## Moving columns
+
+Sometimes it is useful to reorder the columns. 
+This is never necessary for data analysis or plotting, but can be needed when making a table for presentation.
+
+```{r relocate}
+iris %>% relocate(Species)
+```
+
+The defaut is to move the named column first, the `.before` and `.after` arguments let you move the column into any position. 
 
 ## filtering rows
- distinct filter slice
-(sample_frac sample_n)
-between near
 
-## mutating columns
+Filtering rows that meet some condition is a very common task.
+
+For example, to filter rows that have a sepal length greater than 6, we can use 
+
+```{r filter1}
+iris %>% filter(Sepal.Length > 6)
+```
+
+This will filter out each row where the condition is TRUE.
+
+Other mathematical tests include 
+- `==` exactly equals. Remember two equals signs for a test of equality. A single equals sign is used to assign a value to an argument. Sometimes it is safer to use the function `near` which has a built-in tolerance of rounding errors
+
+```{r filter-near}
+sqrt(2) ^ 2 == 2 # should be true, but rounding errors 
+sqrt(2) ^ 2 - 2 # the difference
+near(sqrt(2) ^ 2, 2) # safe alternative
+```
+
+- `!=` not equal to
+- `<` less than
+- `<=` less than or equal to
+- `>` greater than
+- `>=` greater than or equal to
+
+
+The base R equivalent of this is 
+
+```{r filter_base}
+iris[iris$Sepal.Length > 6, ]
+```
+
+Generally, `filter` makes it easier to understand, especially with more complex criteria.
+
+If we want to filter on multiple criteria, we need to decide whether we want all criteria to be TRUE (AND in Boolean logic), or for one or more to be TRUE (OR in Boolean logic).
+
+If we want all criteria to be TRUE, we can separate them by a comma (or by an `&` if you want to be explicit).
+
+```{r filter-AND}
+iris %>% filter(Sepal.Length > 6, Petal.Length > 6)
+```
+
+If we want any criteria to be TRUE, we can separate them by a `|`.
+
+```{r filter-OR}
+iris %>% filter(Sepal.Length > 6 | Petal.Length > 6)
+```
+
+We can negate a criterion by putting `!` in front of it.
+So to filter rows that do not have sepals longer than 6 we can use
+
+```{r filter-NOT}
+iris %>% filter(!Sepal.Length > 6)
+```
+
+Of course, in this example, we could also use `<=` as the test.
+
+Other useful conditions include
+
+- `is.na()` for filtering by missing values.
+- `between()` for filtering values with a range
+- `near()` a safer alterative to `==` as `==`
+- `%in%` is used when you want to test if a value is in a vector
+
+```{r filter-in}
+iris %>% filter(Species %in% c("setosa",     "versicolor"))
+#equivalent to 
+iris %>% filter(Species == "setosa" | Species == "versicolor")
+```
+
+## Slicing the data
+
+Sometimes it is useful to extract rows by number. 
+
+```{r slice}
+iris %>% slice(3:7)
+```
+
+You can use negative numbers to remove rows. Be careful using `slice()` as is the data change, different rows may be returned. 
+
+
+## Distinct
+
+If there are duplicates...
+
+## Random rows
+
+Sometimes you want to sample rows at random from a data.frame. 
+Two useful functions for this are `sample_n` and `sample_frac`. 
+The first samples a constant _n_ rows, the second samples a constant fraction of the rows.
+
+## Mutating and adding columns
+
+
 mutate (transmute)
 lag lead recode n_distinct  n coalesce last first nth row_number 
 cummean cumall cumany
@@ -178,6 +352,19 @@ arrange desc
 ## multi-table
 left_join inner_join full_join (right_join) ((semi_join anti_join))
 bind_cols bind_rows 
+
+## General problems
+
+### Non standard names
+
+Ideally column names should follow the standard rules for naming objects in R - UPPER and lower case letters, numbers, "." and "_" with the first character being a letter (or a dot if you want an invisible object).
+If you have a column name that doesn't follow these rules, you need to enclose it with back-ticks.
+
+```{r non-standard-names}
+
+```
+
+It is sometimes best to rename these columns
 
 
 ## advanced ??

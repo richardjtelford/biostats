@@ -81,9 +81,26 @@ question_checkbox(
   random_answer_order = TRUE,
   allow_retry = TRUE
 )
-
 ```
 
+### Special characters
+
+Object names can include characters with diacritics such as `æ`, `ø`, and `å` but these are best avoided. 
+
+ - You may collaborate with people who do not have these characters on their keyboard.
+ - There are several characters that look like `å` but are different differently by R.
+ - Representing these characters depends on the file encoding. 
+File encoding problems open up a whole world of pain you will want to avoid!
+
+```{r invisible_names_quiz, echo = FALSE}
+question_checkbox(
+  "Select all statements that are true",
+  answer("Object names can include characters with diacritics such as `ø` and `å`.", correct = TRUE),
+  answer("Using characters with diacritics is a bad idea.", correct = TRUE),
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
+```
 
 ## Reserved names
 

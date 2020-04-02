@@ -1,0 +1,147 @@
+---
+title: "Naming things"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library("learnr")
+```
+
+## Assigning a value to a name
+
+If you run an R command, the result will be printed to the screen.
+
+```{r}
+mean(1:10) # mean of sequence of numbers from 1:10
+# result printed to screen
+```
+
+If you want to use the value again, you need to assign it to a name so it can be stored.
+
+The usual assign operator is `<-`. The name is put on the left of the arrow and the value on the right.
+The result can be accessed 
+
+```{r}
+results <- mean(1:10) # mean of sequence of numbers from 1:10
+# result printed to screen
+```
+
+
+
+## Legal names
+
+### Allowed characters
+
+Object names can only include
+
+- lower case letters
+- UPPER case letters
+- numbers
+- dots `.` and underscores `_`
+
+The first character must be a letter or a dot.
+
+```{r legal_names_quiz, echo = FALSE}
+question_checkbox(
+  "Select all the names that are legal",
+  answer("tomato", correct = TRUE),
+  answer("_apple", correct = FALSE, message = "Names cannot start with an underscore"),
+  answer("BASil", correct = TRUE),
+  answer("extra virgin olive oil", correct = FALSE, message = "Names cannot include spaces"),
+  answer(".banana", message = "The object `.banana` will be invisible", correct = TRUE),
+  answer("2onions", correct = FALSE, message = "Names cannot start with a number"),
+  answer("mushroom2", correct = TRUE),
+  answer("carrot/cabbage", correct = FALSE, message = "Names can only include letters, numbers, `.` and `_`"),
+  answer(".", correct = TRUE, message = "The object `.` will be invisible"),
+  answer("spinach_potato", correct = TRUE),
+  answer("kål", correct = TRUE, message = "Names with `æ`, `ø`, or `å` are legal but can cause huge problems with encodings. Best avoided."),
+  random_answer_order = TRUE,
+  allow_retry = TRUE,
+  try_again = "Be sure to select all seven legal names!"
+)
+```
+
+### Invisible objects
+
+If the first character in a name is a dot, the object is invisible (this is sometime useful). 
+Use `ls(all.names = TRUE)` to find any invisible objects. 
+
+```{r invisible_names_quiz, echo = FALSE}
+question_checkbox(
+  "Select all statements that are true",
+  answer("Object names that start with a `.` are invisible", correct = TRUE),
+  answer("Object names cannot start with a `.`", correct = FALSE),
+  answer("Invisible objects appear in the RStudio Environment tab", correct = FALSE),
+  answer("The R command `ls(all.names = TRUE)` will show invisible objects", correct = TRUE),
+  random_answer_order = TRUE,
+  allow_retry = TRUE
+)
+
+```
+
+
+## Reserved names
+
+Some names are reserved for R.
+These include `function`, `if`, `else`, `for`, `while`, `next` and `TRUE`. 
+You can see the full list with `?Reserved`.
+If you try to use one of these names, you will get an error.
+
+```{r reserved_names1, error = TRUE}
+function <- 7 #error
+```
+```{r reserved_names2, error = TRUE}
+next <- 1 #error
+```
+```{r reserved_names3, error = TRUE}
+TRUE <- FALSE #error!
+```
+
+
+```{r reserved_names_quiz, echo = FALSE}
+question_checkbox(
+  "Select all the legal names",
+  answer("TRUE", correct = FALSE),
+  answer("false", correct = TRUE),
+  answer("function", correct = FALSE),
+  answer("NULL", correct = FALSE),
+  answer("na", correct = TRUE),
+  answer("mean", correct = TRUE, message = "It is legal but can be confusing to give objects the same name existing R functions such as `mean`"),
+  answer("Bergen", correct = TRUE),
+  answer("Function", correct = TRUE),
+  random_answer_order = TRUE,
+  allow_retry = FALSE,
+  try_again = "Be sure to select all five legal names!"
+)
+```
+
+## Case Sensitivity
+
+R is a case sensitive language. 
+This means that `fun`, `Fun` and `FUN` are all different objects.
+
+## Good names
+
+    “There are only two hard things in Computer Science: cache invalidation and naming things.”
+
+    — Phil Karlton
+
+- Names should be legal
+- Names should be concise
+- Names should be meaningful
+
+Code completion in RStudio can help 
+
+## Combining words
+
+Make the word breaks clear
+
+- snake_case
+- camelCase
+- UpperCamelCase
+- best.avoided (possible confusion with R fuctions)

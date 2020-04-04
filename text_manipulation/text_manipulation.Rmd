@@ -1,0 +1,152 @@
+---
+title: "Processing text with `stringr`"
+output: 
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, fig.height = 1, fig.width = 5)
+library("learnr")
+library("tidyverse")
+theme_set(theme_classic())
+
+tutorial_options(exercise.cap = "Exercise")
+```
+
+Consider this vector of diatom species names (which could be a column in a `data.frame` or `tibble`)
+
+```{r}
+diatoms <- c("Navicula_elkab",
+             "Nitzschia_palaea",
+             "Aulacoseira_granulata") # a vector
+```
+
+We might want to detect which elements of the vector have a particular pattern, or replace, remove or extract part of the text. We can do this with the `stringr` package which is part of `tidyverse`.
+
+```{r eval = FALSE}
+library("tidyverse")# load stringr and ggplot, dplyr etc
+```
+
+This tutorial starts with detecting or replacing fixed patterns and then shows how you can use regular expressions to extract varying patterns.
+
+## Detecting a pattern
+
+We might want to detect which of the species are in the genus _Navicula_. We can do this with `str_detect` (the base R equivalent is `grepl`.
+
+```{r}
+str_detect(string = diatoms, pattern = "Navicula")
+```
+This return a logical vector, `TRUE` where diatoms includes the pattern "Navicula", `FALSE` otherwise.
+
+If the vector `diatoms` was a column in a `tibble` (or `data.frame`), we can use this test in a `filter` to select rows. 
+
+```{r}
+diatom_df <- tibble(species = diatoms, 
+                    count = c(27, 3, 46))
+diatom_df
+
+diatom_df %>% 
+  filter(str_detect(string = diatoms, pattern = "Navicula"))
+```
+
+## Replacing text
+
+We can replace characters in some text using `str_replace`. So to replace the underscore in diatoms with a space, we could use
+
+```{r}
+str_replace(diatoms, pattern = "_", replacement = " ")
+```
+
+This will replace the first underscore in each element. If there were several underscores and we want to replace them all, we can use `str_replace_all`. If we want to remove some character, we can either use `str_replace` and set `replacement = ""`, or use `str_remove`.
+
+We can use `str_replace` on a column in a tibble with a `mutate`
+
+```{r}
+diatom_df %>% 
+  mutate(species = str_replace(string = species,
+                               pattern = "_", 
+                               replacement  = " "))
+```
+
+## Regular expressions
+
+Sometimes what you want to detect, replace or extract is not a fixed pattern. In this case, regular expressions are a very powerful tool. For a fuller a
+
+https://regex101.com/ is a great 
+
+### Choices
+
+
+
+### Repeating sequences
+
+We can control how many times something gets matched by following it with a quantifier. 
+
+- Zero or more times `?`
+
+```{r}
+#match both palaeoecology and paleoecology
+str_detect(c("palaeoecology", "paleoecology"), pattern = "pala?eo")
+```
+
+
+- One or more times `+`
+
+- Any number of times `*`
+
+- Exactly twice {2}
+
+```{r}
+#extract year from code
+str_extract("x2020", pattern = "\\d{4}")
+```
+
+
+- Between two and four times {2, 4}
+
+- At most four times {, 4}
+
+- At least twice {2, }
+
+
+
+
+
+
+
+anchors
+^$
+
+number of repeats
+? + * {}
+
+.
+\\d \w \s
+
+choice
+[a-z] 
+[aeiou]
+|
+```{r}
+str_extract_all("Navicula elkab", "\\w*")
+```
+
+capture groups
+()
+
+Can also use regular expression in `matches` to select columns of a tibble 
+
+```{r}
+str_trim()
+str_sub()
+str_wrap("The quick brown fox jumps over the lazy dog.", width = 30)
+
+```
+
+
+excaping
+
+fixed()

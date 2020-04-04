@@ -33,7 +33,7 @@ result
 # result printed to screen
 ```
 
-The object can not be used in futher calculations.
+The object can now be used in futher calculations.
 
 ```{r}
 result * result
@@ -45,8 +45,7 @@ question_checkbox(
   "Select all statements that are true",
   answer("The arrow `<-` is the best way to assign an object to a name.", correct = TRUE),
   answer("If the result of a function is not assigned to an name, it is printed to the screen and lost.", correct = TRUE),
-  answer("Forgetting to assign an object is one of the commonest errors.", correct = TRUE),
-  answer("The R command `ls(all.names = TRUE)` will show invisible objects", correct = TRUE),
+  answer("Forgetting to assign an object is a  common error.", correct = TRUE),
   random_answer_order = TRUE,
   allow_retry = TRUE
 )
@@ -191,7 +190,7 @@ Naming things is surprisingly hard.
 
 ```{r good_names_quiz, echo = FALSE}
 question_checkbox(
-  "Select all the legal names",
+  "Select all the good names",
   answer("T", correct = FALSE, message = "Some people use `T` as a shortcut for TRUE. Using `T` as an object name will ruin their code."),
   answer("bird_raw", correct = TRUE),
   answer("weather", correct = TRUE),

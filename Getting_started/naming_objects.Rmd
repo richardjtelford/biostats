@@ -33,7 +33,7 @@ result
 # result printed to screen
 ```
 
-The object can now be used in futher calculations.
+The object can now be used in further calculations.
 
 ```{r}
 result * result

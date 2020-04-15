@@ -153,7 +153,7 @@ question_checkbox(
   answer("Bergen", correct = TRUE),
   answer("Function", correct = TRUE),
   random_answer_order = TRUE,
-  allow_retry = FALSE,
+  allow_retry = TRUE,
   try_again = "Be sure to select all six legal names!"
 )
 ```
@@ -167,9 +167,9 @@ This means that `fun`, `Fun` and `FUN` are all different objects.
 question_checkbox(
   "Select all statements that are true",
   answer("R is a case sensitive language", correct = TRUE),
-  answer("The names `data`, `Data`, and `DATA` refer to the same object.", correct = TRUE),
+  answer("The names `data`, `Data`, and `DATA` refer to the same object.", correct = FALSE),
   random_answer_order = TRUE,
-  allow_retry = FALSE
+  allow_retry = TRUE
 )
 ```
 
@@ -200,7 +200,7 @@ question_checkbox(
   answer("data", correct = FALSE, message = "`data` is not very informative, especially if you have multiple datasets to analyse"),
   answer("ddd", correct = FALSE, message = "You will never remember what `ddd` represents."),
   random_answer_order = TRUE,
-  allow_retry = FALSE,
+  allow_retry = TRUE,
   try_again = "Be sure to select all three good names!"
 )
 ```

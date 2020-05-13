@@ -61,10 +61,10 @@ x <- sqrt(var(pull(iris, Sepal.Width), na.rm = TRUE))
 x
 ```
 
-It is fairly dificult to read isn't it. 
+It is fairly difficult to read isn't it. 
 It can be difficult to see which argument belongs to each function: sometime an argument gets given to the wrong function.
 
-An alternative way to write this code would be to break it into seperate steps
+An alternative way to write this code would be to break it into separate steps
 
 ```{r intermediates}
 x <- pull(iris, Sepal.Width)
@@ -94,7 +94,7 @@ x
 
 The pipe works by passing the result of the function on the left of the pipe to the first argument of the function after the pipe.
 
-If we don't want to pass the result to the first argument, we either need to name the first argument (the result will go to the first available argument), or safer and more explict, use the `.` pronoun to specify where the result should go. 
+If we don't want to pass the result to the first argument, we either need to name the first argument (the result will go to the first available argument), or safer and more explicit, use the `.` pronoun to specify where the result should go. 
 
 ```{r, error=TRUE}
 iris %>% lm(Sepal.Length ~ Sepal.Width) # Fails. The data are given to the first argument which should be the formula
@@ -185,7 +185,7 @@ For example, to select columns that start with "Sepal", we can use the function 
 iris %>% select(starts_with("Sepal"))
 ```
 
-Conversly, if we want to select all columns that end with "Width", we can use the fuction `ends_with()`.
+Conversely, if we want to select all columns that end with "Width", we can use the function `ends_with()`.
 `contains()` is more flexible and `matches()` is the most powerful of the helper functions, using regular expressions to identify the columns.
 
 Sometimes, you might want to select all the columns of a certain type. 
@@ -225,7 +225,7 @@ This is never necessary for data analysis or plotting, but can be needed when ma
 iris %>% relocate(Species)
 ```
 
-The defaut is to move the named column first, the `.before` and `.after` arguments let you move the column into any position. 
+The default is to move the named column first, the `.before` and `.after` arguments let you move the column into any position. 
 
 ## filtering rows
 
@@ -290,7 +290,7 @@ Other useful conditions include
 
 - `is.na()` for filtering by missing values.
 - `between()` for filtering values with a range
-- `near()` a safer alterative to `==` as `==`
+- `near()` a safer alternative to `==` as `==`
 - `%in%` is used when you want to test if a value is in a vector
 
 ```{r filter-in}
@@ -312,7 +312,20 @@ You can use negative numbers to remove rows. Be careful using `slice()` as is th
 
 ## Distinct
 
-If there are duplicates...
+If there are duplicates in the data, we can remove these with `distinct()`.
+`distinct()` with no extra arguments will remove duplicate rows. 
+
+```{r}
+iris %>% distinct()
+```
+
+If we are only interested in some of the columns, we can supply the names of these columns.
+
+```{r}
+iris %>% distinct(Species)
+```
+
+Other columns will be removed unless the argument `.keep_all = TRUE` is used.
 
 ## Random rows
 
@@ -320,21 +333,54 @@ Sometimes you want to sample rows at random from a data.frame.
 Two useful functions for this are `sample_n` and `sample_frac`. 
 The first samples a constant _n_ rows, the second samples a constant fraction of the rows.
 
+```{r sample-n}
+iris %>% sample_n(size = 10)
+```
+
+
 ## Mutating and adding columns
 
+The function `mutate()` can add an new column or replace an existing one.
 
-mutate (transmute)
+To make a new column called `sepal_area` we can use
+
+```{r}
+iris %>% mutate(sepal_area = Sepal.Length * Sepal.Width)
+```
+
+There are lots of functions that are useful to use with mutate. 
+Any function that returns either a single value or as many values as are in the data can be used.
+
+`mutate()` is very useful when cleaning data.
+
+- See [text manipulation](link) for cleaning text with the `stringr` package.
+- See [factor manipulation](link) for processing factors with the `forcats` package.
+- See [conditional replacement](link) with `if_else`, `case_when` and `recode`.
+
+
 lag lead recode n_distinct  n coalesce last first nth row_number 
 cummean cumall cumany
 
-case_when if_else
-
 ## summarise
 
-## grouping data
+Any columns not in the grouping structure will be removed.
+
+## Grouping data
+
+`group_by()` changes the way that `mutate()` and `summarise()` work.
+
+```{r}
+iris %>% 
+  group_by(Species) %>% 
+  mutate(mean_sepal_length = mean(Sepal.Length))
+```
+
 group_by ungroup
  -> summarise
  -> mutate
+ 
+ If a column
+ To remove the group structure, use `ungroup()`
  
 ## count
 count (tally)
@@ -346,7 +392,19 @@ count (tally)
 ((group_map group_modify group_walk))
 
 ## sorting data
-arrange desc 
+
+To sort the data.frame by one of the variables we can use `arrange`.
+
+```{r}
+iris %>% arrange(Sepal.Length, Petal.Length)
+```
+
+This will sort smallest first. 
+To reverse the sort order, use `desc()`
+
+```{r}
+iris %>% arrange(desc(Sepal.Length), -desc(Petal.Length))
+```
 
 
 ## multi-table
@@ -358,13 +416,17 @@ bind_cols bind_rows
 ### Non standard names
 
 Ideally column names should follow the standard rules for naming objects in R - UPPER and lower case letters, numbers, "." and "_" with the first character being a letter (or a dot if you want an invisible object).
-If you have a column name that doesn't follow these rules, you need to enclose it with back-ticks.
+Sometimes when you import data, it has non-standard names with spaces or extra characters.
+If you need to refer to a column name that doesn't follow the rules, you need to enclose it with back-ticks.
 
 ```{r non-standard-names}
-
+df <- tibble(`Region/Country` = "Norway", value = 42)
+df
+df %>% rename(region_country = `Region/Country`)
 ```
 
-It is sometimes best to rename these columns
+It is sometimes best to rename these columns to make them easier to refer to. 
+The `janitor` package can help if there are many columns to rename.
 
 
 ## advanced ??

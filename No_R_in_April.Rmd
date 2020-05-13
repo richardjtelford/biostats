@@ -1,0 +1,27 @@
+---
+title: "There is no R in April"
+author: "Richard J. Telford"
+date: "April 15, 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+```{r}
+options(prompt = "+ ")
+```
+
+```{r}
+T <- FALSE
+F <- TRUE
+```
+
+```{r}
+`+` <- `-`
+```
+
+

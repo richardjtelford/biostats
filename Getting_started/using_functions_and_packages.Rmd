@@ -25,7 +25,7 @@ Missing commas out is a common mistake and will give an error.
 ```{r missing_comma, error = TRUE}
 rnorm(n = 10, mean = 5 sd = 1)
 ```
-
+Do you want to mention that the "words" used for functions should not be used to assign objects etc. they are reserved words. I think you also say this in the naming thingi. Probably good to repeat here.
 ### infix function
 
 There is a special type of function called an infix function that does not use brackets but is placed between two objects.
@@ -41,13 +41,14 @@ For example, in
 Some other infix functions are 
 
 ```{r infix-eg}
+# Could you add a few more of those operators as examples? = * +...
 5 > 3 # Greater than
 c("a", "z") %in% c("a", "b", "c") # are the first values in the second vector
 7 %% 4 # modulus (finds the remainder)
 7 %/% 4 # integer division
 ```
 
-To get help of an infix function surround it with backticks.
+To get help of an infix function surround it with backticks. (just a thouth, we should have a section where and how to find special signs on your keyboard!!! We need a todo list)
 
 ```{r infix_help, eval = FALSE}
 ?`%in%`
@@ -55,12 +56,12 @@ To get help of an infix function surround it with backticks.
 
 ## Packages
 
-All functions arranged into packages.
+All functions are arranged into packages.
 
 Some `R` packages, for example, `stats` and `utils`, are automatically loaded when you start `R`.
 
 There are also several recommended packages that are installed by default, for example the `mgcv` package for fitting generalised additive models.
-
+Maybe you need a sentence here to explain the difference between loading and installing first. I assume stats is automatically loaded, whily mgvc is installed, but not loaded, right? so this one needs to be loaded if you want to use it. I think this would not be clear to me from these two sentences above. It might become clear after reading the two next parts, but the difference between installing and loading is often confusing for beginners (it was for me).
 ## Loading packages
 
 If you want to use the functions in a package, you need to load the package with the function `library()`.
@@ -78,11 +79,11 @@ You can install or update  a package from CRAN with `install.packages()`
 ```{r install-CRAN, eval = FALSE}
 install.packages("vegan")
 ```
-
+Ok, I see here it comes. I wonder if installing should come first then to make it more logical... or at least explain the difference between loading and installing.
 You only need to do this once (unless you need to install a new version of a package), so you should run this directly in the console and not keep it in your script (otherwise it will install the package every time you run the code).
 
 Once you have installed the package, you can use `library()` to load it. 
-You need to do this every time use use it.
+You need to do this every time you use it.
 
 Often you know what package you want to install. 
 If you don't know the name of the package you need for your analyses the [task views](https://cran.r-project.org/web/views/) can help. 
@@ -109,7 +110,8 @@ Some recommendations
 - Check exactly which package won't install. It may be a dependancy of the package you want. Try to install it again.
 - Restart `R` (in Session menu in Rstudio) and try again.
 - Google any error message. Someone else may have had the same problem.
-
+Quiet often I get an error that the packages does not fit with my version of R. Not sure how to solve this... I usually ask Richard...
+- Find help in R club!
 
 ## Name conflicts
 
@@ -126,7 +128,7 @@ library(dplyr)
 library(MASS) # R will report that select is being masked
 iris %>% select(Species)
 ```
-
+Can we show a picture here from RStudio, how you can see which function is selected? When you start typing you can see that it will suggest 2 different selects...
 If you have code that worked one day and fails the next with a weird error messages, it might be because of a name conflict. 
 If you start typing a function name into Rstudio, it will show which package the function comes from.
 
@@ -208,7 +210,7 @@ This is a big problem for reproducibility.
 The solution is to make sure you re-run your code with the same packages. 
 That is not easy to do by hand.
 The [`renv` package](https://rstudio.github.io/renv/articles/renv.html) keeps track of all the packages you are using (and all the packages they depend on). 
-I use `renv` for my analyses.
+I use `renv` for my analyses. (should this be using renv for your analysis is therefore a good idea..., do we want to use I?)
 
 The workflow when working with `renv` is:
 
@@ -239,7 +241,7 @@ mutliply <- function(x, y = 1){ #The default value of y is 1
 multiply(x = 6, y = 7)
 ```
 
-
+We should probably have an own section on writing functions. But it's good to mention this here quickly and then refer to the next section.
 
 Once you have written a function, it can be useful to make your own package. This makes it easy to use in your own analysis and easy to share with other users. 
 Information on how to make a package using the `usethis` and `devtools` packages can be found at [https://r-pkgs.org/whole-game.html](https://r-pkgs.org/whole-game.html). 

@@ -1,0 +1,111 @@
+---
+title: "Untitled"
+runtime: shiny
+output: html_document
+---
+```{r, message = FALSE, echo = FALSE}
+library("ggplot2")
+library("patchwork")
+library("tibble")
+theme_set(theme_classic())
+```
+
+## Normal or Gaussian
+
+$\mu$
+
+```{r, echo = FALSE}
+
+inputPanel(
+  sliderInput("mean", label = "Mean",
+              min = -10, max = 10, value = 0, step = 0.25),
+  
+  sliderInput("sd", label = "Standard deviation",
+              min = 0, max = 5, value = 1, step = 0.25)
+  )
+
+
+renderPlot({
+  df <- tibble(x = seq(-25, 25, 0.1),
+         den = dnorm(x, mean = input$mean , input$sd),
+         p = pnorm(x, mean = input$mean , input$sd))
+
+  g1 <- ggplot(df, aes(x = x, y = den)) +
+    geom_line() +
+    ylim(0, dnorm(0, 0, .25)) +
+    labs(x = "x", y = "Density")
+  
+g2 <- ggplot(df, aes(x = x, y = p)) +
+  geom_line() +
+  labs(x = "x", y = "Cumulative density") 
+
+g1 + g2 
+})
+```
+
+# Poisson
+
+```{r, echo = FALSE}
+
+inputPanel(
+  sliderInput("lambda", label = "Mean",
+              min = 0, max = 10, value = 0, step = 0.25)
+  )
+
+
+renderPlot({
+  df <- tibble(x = seq(0, 25, 1),
+         den = dpois(x, lambda = input$lambda),
+         p = ppois(x, lambda = input$lambda))
+
+  g1 <- ggplot(df, aes(x = x, y = den)) +
+    geom_col() +
+    ylim(0, dpois(0, 0, 0)) +
+    labs(x = "x", y = "Density")
+  
+g2 <- ggplot(df, aes(x = x, y = p)) +
+  geom_line() +
+  labs(x = "x", y = "Cumulative density") 
+
+g1 + g2 
+})
+```
+
+## Binomial
+
+```{r, echo = FALSE}
+
+inputPanel(
+  sliderInput("p", label = "p",
+              min = 0, max = 1, value = 0.5, step = 0.1),
+  
+  sliderInput("n", label = "n",
+              min = 1, max = 10, value = 1, step = 1)
+  )
+
+
+renderPlot({
+  df <- tibble(x = seq(0, input$n, 1),
+               x2 = x/input$n,
+         den = dbinom(x, prob = input$p , size = input$n),
+         p = pbinom(x, prob = input$p , size = input$n))
+
+  g1 <- ggplot(df, aes(x = x2, y = den)) +
+    geom_col() +
+    ylim(0, dbinom(0, size = 1, 0)) +
+    labs(x = "x", y = "Density")
+  
+g2 <- ggplot(df, aes(x = x2, y = p)) +
+  geom_line() +
+  labs(x = "x", y = "Cumulative density") 
+
+g1 + g2 
+})
+```
+
+#extra distributions
+# negative binomial
+
+# gamma
+# log normal
+# beta

@@ -18,7 +18,7 @@ tutorial_options(exercise.cap = "Exercise")
 
 ## Introduction
 
-When making a publication ready plot, we often need to use special characters and mathematical notation (such as $TP~concentration~\mu g l^{-1}$ or $\sqrt{Standardised~ residuals}$) for the axes and other labels. The functions `expression()` and `bquote()` are powerful tools for annotating figures with mathematical notation in R. This functionality is not obvious from their respective help files. `demo(plotmath)` and `?plotmath` shows the huge potential of `expression()`, but do not help that much with getting the code need for many real cases.
+When making a publication ready plot, we often need to use _italics_, special characters and mathematical notation (such as $TP~concentration~\mu g l^{-1}$ or $\sqrt{Standardised~ residuals}$) for the axes and other labels. The functions `expression()` and `bquote()` are powerful tools for annotating figures with mathematical notation in R. This functionality is not obvious from their respective help files. `demo(plotmath)` and `?plotmath` shows the huge potential of `expression()`, but do not help that much with getting the code need for many real cases.
 
 Expressions are comprised of symbols. The expression $TP ~\mu g l^{-1}$ includes the symbols $TP$, $concentration$, $\mu$, $g$, $l$, and $^{-1}$. In this tutorial, you will learn how to generate these symbols and combine them with the `expression()` function.
 
@@ -74,7 +74,6 @@ g + labs(x = expression(Area~m^2))
 
 ### Other tips
 
-- `demo(plotmath)` and `?plotmath` are very useful.
 - Some symbols are not defined by `plotmath` can be included using [unicode](http://www.unicode.org/charts/). For example a per mil symbol (‰) - `\u2030` 
 - To start an expression() with a superscript (or subscript), put `phantom()` first.
 
